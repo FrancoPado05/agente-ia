@@ -6,6 +6,13 @@ from httpx import ASGITransport, AsyncClient
 from src.main import create_app
 
 
+@pytest.fixture(autouse=True)
+def _set_env():
+    import os
+
+    os.environ["META_WEBHOOK_VERIFY_TOKEN"] = "test_token_123"
+
+
 @pytest.fixture
 def app():
     _app = create_app()
@@ -23,7 +30,7 @@ async def test_webhook_get_verify(app):
             "/webhook",
             params={
                 "hub.mode": "subscribe",
-                "hub.verify_token": "TODO_SET_VERIFY_TOKEN",
+                "hub.verify_token": "test_token_123",
                 "hub.challenge": "12345",
             },
         )

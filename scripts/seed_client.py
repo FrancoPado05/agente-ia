@@ -25,7 +25,7 @@ async def main():
     parser.add_argument("--tools", nargs="*", default=["get_weather"])
     args = parser.parse_args()
 
-    db_url = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5432/agente_ia")
+    db_url = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5433/agente_ia")
     engine = create_async_engine(db_url)
 
     async with engine.begin() as conn:
@@ -44,7 +44,7 @@ async def main():
             await conn.execute(
                 text("""
                     INSERT INTO client_tools (client_id, tool_id, enabled)
-                    VALUES (:cid, :tid, 1)
+                    VALUES (:cid, :tid, TRUE)
                     ON CONFLICT(client_id, tool_id) DO NOTHING
                 """),
                 {"cid": args.client_id, "tid": tool_id},

@@ -9,6 +9,7 @@ Reads and executes all .sql files from src/persistence/migrations/ in order.
 
 import asyncio
 import os
+import re
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -21,7 +22,7 @@ MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "src" / "persistence" 
 
 
 async def main():
-    db_url = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5432/agente_ia")
+    db_url = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5433/agente_ia")
     engine = create_async_engine(db_url)
 
     migration_files = sorted(MIGRATIONS_DIR.glob("*.sql"))
@@ -33,7 +34,9 @@ async def main():
         for mf in migration_files:
             print(f"Running {mf.name}...")
             sql = mf.read_text()
-            await conn.execute(text(sql))
+            statements = [s.strip() for s in re.split(r";\s*\n", sql) if s.strip()]
+            for stmt in statements:
+                await conn.execute(text(stmt))
             print("  Done.")
 
     print("All migrations applied.")

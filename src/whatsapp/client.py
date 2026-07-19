@@ -1,4 +1,5 @@
 import logging
+import os
 
 import httpx
 
@@ -10,8 +11,8 @@ logger = logging.getLogger(__name__)
 class WhatsAppClient:
     BASE_URL = "https://graph.facebook.com"
 
-    def __init__(self, api_token: str, api_version: str = "v22.0"):
-        self._token = api_token
+    def __init__(self, api_token: str | None = None, api_version: str = "v22.0"):
+        self._token = api_token or os.getenv("META_API_TOKEN", "")
         self._api_version = api_version
 
     async def send_text(self, to: str, body: str, phone_number_id: str) -> WhatsAppResponse:
