@@ -13,9 +13,7 @@ services:
           name: agente-ia-db
           property: connectionString
       - key: REDIS_URL
-        fromRedis:
-          name: agente-ia-redis
-          property: connectionString
+        sync: false
       - key: META_APP_ID
         sync: false
       - key: META_APP_SECRET
@@ -41,7 +39,3 @@ databases:
     region: oregon
     plan: starter
 
-redis:
-  - name: agente-ia-redis
-    region: oregon
-    plan: starter
