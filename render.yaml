@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: agente-ia
+    env: python
+    region: oregon
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agente-ia-db
+          property: connectionString
+      - key: REDIS_URL
+        fromRedis:
+          name: agente-ia-redis
+          property: connectionString
+      - key: META_APP_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: META_WEBHOOK_VERIFY_TOKEN
+        sync: false
+      - key: META_API_TOKEN
+        sync: false
+      - key: META_API_VERSION
+        value: v22.0
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: APP_SECRET_KEY
+        generateValue: true
+      - key: LOG_LEVEL
+        value: INFO
+
+databases:
+  - name: agente-ia-db
+    databaseName: agente_ia
+    region: oregon
+    plan: starter
+
+redis:
+  - name: agente-ia-redis
+    region: oregon
+    plan: starter

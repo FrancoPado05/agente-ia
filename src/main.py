@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 
 from src.agent.worker import handle_message
+from src.dashboard.router import router as dashboard_router
 from src.observability.event_logger import EventLogger
 from src.persistence.database import close_engine, get_session, init_engine
 from src.persistence.queries import get_client_id_by_phone
@@ -66,6 +67,12 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     app = FastAPI(lifespan=lifespan)
+
+    @app.get("/health")
+    async def health():
+        return {"status": "ok"}
+
+    app.include_router(dashboard_router)
     app.include_router(webhook_router)
     return app
 
