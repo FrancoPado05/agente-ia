@@ -1,0 +1,43 @@
+[project]
+name = "agente-ia"
+version = "0.1.0"
+description = "Multi-tenant WhatsApp conversational agent engine"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.135",
+    "uvicorn[standard]>=0.30",
+    "langgraph>=0.3",
+    "langchain-core>=0.3",
+    "sqlalchemy[asyncio]>=2.0",
+    "asyncpg>=0.30",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "httpx>=0.28",
+    "langchain-openai>=0.3",
+    "redis>=5.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.6",
+    "mypy>=1.12",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "ARG"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
